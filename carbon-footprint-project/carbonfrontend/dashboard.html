@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CarbonTrack - Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f3f7f4;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 245px;
+            height: 100vh;
+            background: #123d2a;
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 12px 30px;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            font-size: 30px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #a9c4b4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 10px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav button {
+            border: none;
+            background: transparent;
+            color: #dcebe3;
+            padding: 13px 14px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav button:hover {
+            background: #1d573d;
+            color: white;
+        }
+
+        .nav button.active {
+            background: #20b86b;
+            color: white;
+        }
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout button {
+            width: 100%;
+            border: none;
+            background: #1d573d;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 245px;
+            min-height: 100vh;
+            padding: 28px 35px;
+        }
+
+        /* ================= TOP BAR ================= */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 28px;
+            color: #163d2b;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #dce5df;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #20b86b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #e1e8e3;
+            box-shadow: 0 4px 15px rgba(20, 60, 40, 0.05);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #e4f6ec;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .stat-card h2 {
+            font-size: 26px;
+            color: #163d2b;
+        }
+
+        .stat-card p {
+            color: #7b857f;
+            font-size: 13px;
+        }
+
+        .positive {
+            color: #20a764;
+            font-size: 12px;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            border: 1px solid #e1e8e3;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(20, 60, 40, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            color: #163d2b;
+        }
+
+        .card-header span {
+            font-size: 12px;
+            color: #7b857f;
+        }
+
+        /* ================= CHART ================= */
+
+        .chart {
+            height: 230px;
+            display: flex;
+            align-items: flex-end;
+            gap: 25px;
+            padding: 15px 15px 0;
+            border-bottom: 1px solid #e4e9e5;
+        }
+
+        .bar-container {
+            height: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar {
+            width: 45px;
+            background: #20b86b;
+            border-radius: 7px 7px 0 0;
+            transition: 0.3s;
+        }
+
+        .bar:hover {
+            opacity: 0.75;
+        }
+
+        .day {
+            font-size: 11px;
+            color: #8b938e;
+        }
+
+        /* ================= GOAL ================= */
+
+        .goal-box {
+            padding: 5px 0;
+        }
+
+        .goal-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .goal-title strong {
+            color: #26382f;
+        }
+
+        .goal-title span {
+            color: #20a764;
+            font-weight: bold;
+        }
+
+        .progress {
+            width: 100%;
+            height: 9px;
+            background: #e5eee8;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 72%;
+            height: 100%;
+            background: #20b86b;
+            border-radius: 20px;
+        }
+
+        .goal-text {
+            font-size: 12px;
+            color: #7b857f;
+            margin-top: 10px;
+        }
+
+        /* ================= QUICK ACTIONS ================= */
+
+        .quick-actions {
+            margin-top: 20px;
+        }
+
+        .action {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px;
+            border-radius: 10px;
+            margin-bottom: 9px;
+            background: #f5f8f6;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action:hover {
+            background: #e8f5ed;
+        }
+
+        .action-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            background: #dff5e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action div:last-child {
+            font-size: 13px;
+            font-weight: bold;
+            color: #294337;
+        }
+
+        /* ================= PAGES ================= */
+
+        .page {
+            display: none;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        /* ================= FORMS ================= */
+
+        .form-container {
+            max-width: 650px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #34483d;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5dfd9;
+            border-radius: 8px;
+            outline: none;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #20b86b;
+        }
+
+        .primary-btn {
+            border: none;
+            background: #20b86b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .primary-btn:hover {
+            background: #179456;
+        }
+
+        /* ================= BADGES ================= */
+
+        .badges {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .badge {
+            text-align: center;
+            padding: 30px 20px;
+            background: white;
+            border: 1px solid #e1e8e3;
+            border-radius: 15px;
+        }
+
+        .badge-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .badge h3 {
+            color: #163d2b;
+            margin-bottom: 7px;
+        }
+
+        .badge p {
+            font-size: 12px;
+            color: #7b857f;
+        }
+
+        /* ================= MARKETPLACE ================= */
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .product {
+            background: white;
+            border: 1px solid #e1e8e3;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .product-image {
+            height: 130px;
+            background: #edf8f1;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .product h3 {
+            font-size: 15px;
+            margin-bottom: 7px;
+        }
+
+        .product p {
+            font-size: 12px;
+            color: #7b857f;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            color: #20a764;
+            font-weight: bold;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .logo {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .logo strong,
+            .menu-title,
+            .nav button span,
+            .logout span {
+                display: none;
+            }
+
+            .nav button {
+                text-align: center;
+                font-size: 20px;
+            }
+
+            .main {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .badges {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <span>🌱</span>
+        <strong>CarbonTrack</strong>
+    </div>
+
+    <div class="menu-title">
+        Main Menu
+    </div>
+
+    <nav class="nav">
+
+        <button class="active" onclick="showPage('dashboard', this)">
+            🏠 <span>Dashboard</span>
+        </button>
+
+        <button onclick="showPage('survey', this)">
+            📝 <span>Carbon Survey</span>
+        </button>
+
+        <button onclick="showPage('history', this)">
+            📊 <span>Carbon History</span>
+        </button>
+
+        <button onclick="showPage('goals', this)">
+            🎯 <span>Goals</span>
+        </button>
+
+        <button onclick="showPage('badges', this)">
+            🏆 <span>Badges</span>
+        </button>
+
+        <button onclick="showPage('marketplace', this)">
+            🛍️ <span>Eco Marketplace</span>
+        </button>
+
+    </nav>
+
+    <div class="menu-title" style="margin-top:25px;">
+        Account
+    </div>
+
+    <nav class="nav">
+
+        <button onclick="showPage('profile', this)">
+            👤 <span>Profile</span>
+        </button>
+
+        <button onclick="showPage('settings', this)">
+            ⚙️ <span>Settings</span>
+        </button>
+
+    </nav>
+
+    <div class="logout">
+        <button onclick="logout()">
+            🚪 <span>Logout</span>
+        </button>
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div class="welcome">
+
+            <h1>Good morning, User 👋</h1>
+
+            <p>
+                Track your carbon footprint and build a greener lifestyle.
+            </p>
+
+        </div>
+
+        <div class="profile">
+
+            <div class="notification">
+                🔔
+            </div>
+
+            <div class="avatar">
+                U
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <section id="dashboard" class="page active-page">
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <div>
+                        <p>Total Carbon</p>
+                    </div>
+
+                    <div class="stat-icon">
+                        🌍
+                    </div>
+                </div>
+
+                <h2>12.4 kg</h2>
+
+                <span class="positive">
+                    ↓ 8.4% this month
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <div>
+                        <p>Today's Emission</p>
+                    </div>
+
+                    <div class="stat-icon">
+                        🌱
+                    </div>
+                </div>
+
+                <h2>2.1 kg</h2>
+
+                <span class="positive">
+                    ↓ 4.2% from yesterday
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <div>
+                        <p>Goals Completed</p>
+                    </div>
+
+                    <div class="stat-icon">
+                        🎯
+                    </div>
+                </div>
+
+                <h2>7</h2>
+
+                <span class="positive">
+                    +2 this month
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <div>
+                        <p>Eco Score</p>
+                    </div>
+
+                    <div class="stat-icon">
+                        ⭐
+                    </div>
+                </div>
+
+                <h2>82%</h2>
+
+                <span class="positive">
+                    Excellent progress
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="content-grid">
+
+            <!-- CHART -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2>Carbon Emission Overview</h2>
+
+                    <span>Last 7 days</span>
+
+                </div>
+
+                <div class="chart">
+
+                    <div class="bar-container">
+                        <div class="bar" style="height:45%;"></div>
+                        <span class="day">Mon</span>
+                    </div>
+
+                    <div class="bar-container">
+                        <div class="bar" style="height:60%;"></div>
+                        <span class="day">Tue</span>
+                    </div>
+
+                    <div class="bar-container">
+                        <div class="bar" style="height:40%;"></div>
+                        <span class="day">Wed</span>
+                    </div>
+
+                    <div class="bar-container">
+                        <div class="bar" style="height:72%;"></div>
+                        <span class="day">Thu</span>
+                    </div>
+
+                    <div class="bar-container">
+                        <div class="bar" style="height:52%;"></div>
+                        <span class="day">Fri</span>
+                    </div>
+
+                    <div class="bar-container">
+                        <div class="bar" style="height:35%;"></div>
+                        <span class="day">Sat</span>
+                    </div>
+
+                    <div class="bar-container">
+                        <div class="bar" style="height:30%;"></div>
+                        <span class="day">Sun</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- GOAL -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h2>Current Goal</h2>
+                    <span>Monthly</span>
+                </div>
+
+                <div class="goal-box">
+
+                    <div class="goal-title">
+
+                        <strong>Reduce emissions</strong>
+
+                        <span>72%</span>
+
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-fill"></div>
+                    </div>
+
+                    <p class="goal-text">
+                        You are doing great! Keep reducing your daily emissions.
+                    </p>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <div class="action" onclick="showPage('survey')">
+                        <div class="action-icon">📝</div>
+                        <div>Complete Carbon Survey</div>
+                    </div>
+
+                    <div class="action" onclick="showPage('goals')">
+                        <div class="action-icon">🎯</div>
+                        <div>Set a New Goal</div>
+                    </div>
+
+                    <div class="action" onclick="showPage('history')">
+                        <div class="action-icon">📊</div>
+                        <div>View Carbon History</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SURVEY ================= -->
+
+    <section id="survey" class="page">
+
+        <div class="card form-container">
+
+            <div class="card-header">
+                <h2>Carbon Survey</h2>
+                <span>Calculate your footprint</span>
+            </div>
+
+            <div class="form-group">
+                <label>Transport Mode</label>
+
+                <select>
+                    <option>Select transport mode</option>
+                    <option>Car</option>
+                    <option>Bus</option>
+                    <option>Train</option>
+                    <option>Bike</option>
+                    <option>Walking</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Diet Type</label>
+
+                <select>
+                    <option>Select diet type</option>
+                    <option>Vegetarian</option>
+                    <option>Vegan</option>
+                    <option>Non-Vegetarian</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Energy Usage</label>
+
+                <input type="number" placeholder="Enter energy usage">
+            </div>
+
+            <div class="form-group">
+                <label>Frequency</label>
+
+                <select>
+                    <option>Daily</option>
+                    <option>Weekly</option>
+                    <option>Monthly</option>
+                </select>
+            </div>
+
+            <button class="primary-btn">
+                Calculate Carbon Footprint
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HISTORY ================= -->
+
+    <section id="history" class="page">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2>Carbon History</h2>
+
+                <span>Your emission records</span>
+
+            </div>
+
+            <div class="chart">
+
+                <div class="bar-container">
+                    <div class="bar" style="height:50%;"></div>
+                    <span class="day">01</span>
+                </div>
+
+                <div class="bar-container">
+                    <div class="bar" style="height:70%;"></div>
+                    <span class="day">02</span>
+                </div>
+
+                <div class="bar-container">
+                    <div class="bar" style="height:40%;"></div>
+                    <span class="day">03</span>
+                </div>
+
+                <div class="bar-container">
+                    <div class="bar" style="height:60%;"></div>
+                    <span class="day">04</span>
+                </div>
+
+                <div class="bar-container">
+                    <div class="bar" style="height:45%;"></div>
+                    <span class="day">05</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= GOALS ================= -->
+
+    <section id="goals" class="page">
+
+        <div class="card form-container">
+
+            <div class="card-header">
+                <h2>Set Carbon Goal</h2>
+                <span>Reduce your emissions</span>
+            </div>
+
+            <div class="form-group">
+
+                <label>Target Carbon Emission</label>
+
+                <input
+                    type="number"
+                    placeholder="Enter target in kg CO₂"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Goal Duration</label>
+
+                <select>
+                    <option>1 Week</option>
+                    <option>1 Month</option>
+                    <option>3 Months</option>
+                    <option>6 Months</option>
+                </select>
+
+            </div>
+
+            <button class="primary-btn">
+                Create Goal
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= BADGES ================= -->
+
+    <section id="badges" class="page">
+
+        <div class="card-header">
+            <h2>Your Achievements</h2>
+        </div>
+
+        <div class="badges">
+
+            <div class="badge">
+
+                <div class="badge-icon">
+                    🌱
+                </div>
+
+                <h3>Eco Starter</h3>
+
+                <p>
+                    Completed your first carbon survey.
+                </p>
+
+            </div>
+
+
+            <div class="badge">
+
+                <div class="badge-icon">
+                    🌍
+                </div>
+
+                <h3>Green Warrior</h3>
+
+                <p>
+                    Reduced your carbon footprint.
+                </p>
+
+            </div>
+
+
+            <div class="badge">
+
+                <div class="badge-icon">
+                    🏆
+                </div>
+
+                <h3>Eco Champion</h3>
+
+                <p>
+                    Completed multiple sustainability goals.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MARKETPLACE ================= -->
+
+    <section id="marketplace" class="page">
+
+        <div class="card-header">
+            <h2>Eco Marketplace</h2>
+        </div>
+
+        <div class="products">
+
+            <div class="product">
+
+                <div class="product-image">
+                    🌱
+                </div>
+
+                <h3>Reusable Plant Kit</h3>
+
+                <p>
+                    Sustainable planting kit for your home.
+                </p>
+
+                <span class="price">
+                    250 Points
+                </span>
+
+            </div>
+
+
+            <div class="product">
+
+                <div class="product-image">
+                    🥤
+                </div>
+
+                <h3>Reusable Bottle</h3>
+
+                <p>
+                    Reduce single-use plastic consumption.
+                </p>
+
+                <span class="price">
+                    180 Points
+                </span>
+
+            </div>
+
+
+            <div class="product">
+
+                <div class="product-image">
+                    🛍️
+                </div>
+
+                <h3>Eco Shopping Bag</h3>
+
+                <p>
+                    Reusable and environmentally friendly bag.
+                </p>
+
+                <span class="price">
+                    120 Points
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= PROFILE ================= -->
+
+    <section id="profile" class="page">
+
+        <div class="card form-container">
+
+            <div class="card-header">
+                <h2>Profile</h2>
+            </div>
+
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" placeholder="Your name">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="Your email">
+            </div>
+
+            <button class="primary-btn">
+                Save Profile
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SETTINGS ================= -->
+
+    <section id="settings" class="page">
+
+        <div class="card">
+
+            <div class="card-header">
+                <h2>Settings</h2>
+            </div>
+
+            <p style="color:#6b7280;">
+                Manage your application preferences here.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    /* ================= PAGE NAVIGATION ================= */
+
+    function showPage(pageId, clickedButton) {
+
+        // Hide all pages
+        const pages = document.querySelectorAll(".page");
+
+        pages.forEach(page => {
+            page.classList.remove("active-page");
+        });
+
+        // Show selected page
+        const selectedPage = document.getElementById(pageId);
+
+        if (selectedPage) {
+            selectedPage.classList.add("active-page");
+        }
+
+        // Remove active from all navigation buttons
+        const buttons = document.querySelectorAll(".nav button");
+
+        buttons.forEach(button => {
+            button.classList.remove("active");
+        });
+
+        // Add active to clicked button
+        if (clickedButton) {
+            clickedButton.classList.add("active");
+        }
+
+        // Scroll to top
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* ================= LOGOUT ================= */
+
+    function logout() {
+
+        const confirmLogout =
+            confirm("Are you sure you want to logout?");
+
+        if (confirmLogout) {
+
+            alert("Logged out successfully.");
+
+            // You can connect your backend logout API here later.
+
+        }
+    }
+
+</script>
+
+</body>
+</html>
