@@ -105,7 +105,6 @@ carbon-footprint-tracker/
 - Open `carbon-backend` in STS  
 - Configure MySQL database  
 - Run `CarbonBackendApplication.java`  
-- Server runs on http://localhost:8080
 
 ### Frontend
 - Open `dashboard.html` in browser  
